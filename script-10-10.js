@@ -1,6 +1,3 @@
-
-
-
 class Slider {
     constructor(selector) {
         this.selector = selector;
@@ -53,7 +50,7 @@ class Slider {
         let widthField = parseInt(window.getComputedStyle(this.slider).width);
         let heightField = parseInt(window.getComputedStyle(this.slider).height);
         document.onmousemove = (event) => {
-            console.log(event.target.parentNode);
+            //console.log(event.target.parentNode);
             if(event.target.parentNode !== this.wrapper.querySelector('.slider__slide')) {
                 this.direction = 0;
                 return;
@@ -151,17 +148,23 @@ Slider.FRAME_TIME = 16;
 Slider.SLIDE_TIME = 1000;
 Slider.SLIDE_TIME_AUTO = 1200;
 
+
+
 document.addEventListener('DOMContentLoaded', function() {
     let content = document.querySelector(".content");
     content.style.display = "none";
+
     let preloaderItem = document.querySelector(".preloaderItem");
     let fontSize = 30;
-    let t = setInterval(function () {
-        fontSize += 2;
-        preloaderItem.style.fontSize = fontSize + 'px';
-    }, 25)
+
+    let startAnimation;
+    requestAnimationFrame(function anim(t) {
+        if (!startAnimation) startAnimation = t;
+        let animation = t - startAnimation;
+        preloaderItem.style.fontSize = fontSize + (animation/5000) * 100 + 'px';
+        requestAnimationFrame(anim);
+    })
     window.onload = function () {
-        clearInterval(t);
         let preloader = document.querySelector(".preloader");
         preloader.style.display = "none";
         let content = document.querySelector(".content");
@@ -169,8 +172,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let slider = new Slider('.slider');
         slider.init();
-        let tag = document.createElement('script');
     }
-
-
 })
